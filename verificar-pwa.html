@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar PWA - AbrilResinart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #2C3E50;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #7F8C8D;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .check-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border-left: 4px solid #E8E8E8;
+            background: #F8F9FA;
+            transition: all 0.3s ease;
+        }
+        
+        .check-item.success {
+            border-left-color: #27AE60;
+            background: #C8E6C9;
+        }
+        
+        .check-item.error {
+            border-left-color: #E74C3C;
+            background: #FFE5E5;
+        }
+        
+        .check-item.warning {
+            border-left-color: #F39C12;
+            background: #FFF9C4;
+        }
+        
+        .check-label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #2C3E50;
+        }
+        
+        .check-status {
+            font-size: 13px;
+            color: #7F8C8D;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #5DADE2;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background: #3498DB;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(93, 173, 226, 0.4);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .info-box {
+            background: #E3F2FD;
+            border-left: 4px solid #5DADE2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        
+        .results {
+            margin-top: 30px;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Verificación PWA</h1>
+        <p class="subtitle">Comprobando que todos los archivos estén correctos...</p>
+        
+        <div class="results" id="results">
+            <div class="check-item" id="check-manifest">
+                <div class="check-label">📄 Manifest.json</div>
+                <div class="check-status">Verificando...</div>
+            </div>
+            
+            <div class="check-item" id="check-sw">
+                <div class="check-label">⚙️ Service Worker</div>
+                <div class="check-status">Verificando...</div>
+            </div>
+            
+            <div class="check-item" id="check-icons">
+                <div class="check-label">🎨 Iconos</div>
+                <div class="check-status">Verificando...</div>
+            </div>
+            
+            <div class="check-item" id="check-html">
+                <div class="check-label">📱 HTML Principal</div>
+                <div class="check-status">Verificando...</div>
+            </div>
+            
+            <div class="check-item" id="check-https">
+                <div class="check-label">🔒 HTTPS/Localhost</div>
+                <div class="check-status">Verificando...</div>
+            </div>
+        </div>
+        
+        <div id="install-section" style="display: none;">
+            <a href="AbrilResinart.html" class="btn">✨ Abrir AbrilResinart</a>
+        </div>
+        
+        <div class="info-box" id="info-box" style="display: none;"></div>
+    </div>
+    
+    <script>
+        async function verificarPWA() {
+            let todoBien = true;
+            
+            // 1. Verificar manifest.json
+            try {
+                const manifestResponse = await fetch('manifest.json');
+                if (manifestResponse.ok) {
+                    const manifest = await manifestResponse.json();
+                    updateCheck('check-manifest', true, 
+                        `✅ Encontrado (${manifest.name})`);
+                } else {
+                    updateCheck('check-manifest', false, 
+                        '❌ No se pudo cargar el manifest.json');
+                    todoBien = false;
+                }
+            } catch (error) {
+                updateCheck('check-manifest', false, 
+                    '❌ Error: ' + error.message);
+                todoBien = false;
+            }
+            
+            // 2. Verificar Service Worker
+            if ('serviceWorker' in navigator) {
+                try {
+                    const swResponse = await fetch('service-worker.js');
+                    if (swResponse.ok) {
+                        updateCheck('check-sw', true, 
+                            '✅ Service Worker encontrado y listo');
+                    } else {
+                        updateCheck('check-sw', false, 
+                            '❌ service-worker.js no encontrado');
+                        todoBien = false;
+                    }
+                } catch (error) {
+                    updateCheck('check-sw', false, 
+                        '❌ Error: ' + error.message);
+                    todoBien = false;
+                }
+            } else {
+                updateCheck('check-sw', 'warning', 
+                    '⚠️ Service Workers no soportados en este navegador');
+            }
+            
+            // 3. Verificar iconos
+            let iconosOK = 0;
+            const iconos = ['icon-192.png', 'icon-512.png'];
+            
+            for (const icono of iconos) {
+                try {
+                    const response = await fetch(icono);
+                    if (response.ok) iconosOK++;
+                } catch (error) {
+                    // Icono no encontrado
+                }
+            }
+            
+            if (iconosOK === 2) {
+                updateCheck('check-icons', true, 
+                    '✅ Ambos iconos (192px y 512px) encontrados');
+            } else {
+                updateCheck('check-icons', false, 
+                    `❌ Solo ${iconosOK}/2 iconos encontrados`);
+                todoBien = false;
+            }
+            
+            // 4. Verificar HTML principal
+            try {
+                const htmlResponse = await fetch('AbrilResinart.html');
+                if (htmlResponse.ok) {
+                    updateCheck('check-html', true, 
+                        '✅ AbrilResinart.html disponible');
+                } else {
+                    updateCheck('check-html', false, 
+                        '❌ AbrilResinart.html no encontrado');
+                    todoBien = false;
+                }
+            } catch (error) {
+                updateCheck('check-html', false, 
+                    '❌ Error: ' + error.message);
+                todoBien = false;
+            }
+            
+            // 5. Verificar HTTPS o localhost
+            const isSecure = location.protocol === 'https:' || 
+                           location.hostname === 'localhost' || 
+                           location.hostname === '127.0.0.1';
+            
+            if (isSecure) {
+                updateCheck('check-https', true, 
+                    `✅ Protocolo seguro (${location.protocol})`);
+            } else {
+                updateCheck('check-https', 'warning', 
+                    `⚠️ Se recomienda HTTPS para PWA en producción (actual: ${location.protocol})`);
+            }
+            
+            // Mostrar resultado final
+            setTimeout(() => {
+                mostrarResultadoFinal(todoBien);
+            }, 500);
+        }
+        
+        function updateCheck(id, status, message) {
+            const element = document.getElementById(id);
+            element.className = 'check-item';
+            
+            if (status === true) {
+                element.classList.add('success');
+            } else if (status === false) {
+                element.classList.add('error');
+            } else {
+                element.classList.add('warning');
+            }
+            
+            element.querySelector('.check-status').textContent = message;
+        }
+        
+        function mostrarResultadoFinal(todoBien) {
+            const infoBox = document.getElementById('info-box');
+            const installSection = document.getElementById('install-section');
+            
+            infoBox.style.display = 'block';
+            
+            if (todoBien) {
+                installSection.style.display = 'block';
+                infoBox.innerHTML = `
+                    <strong>🎉 ¡Perfecto!</strong><br>
+                    Todos los archivos necesarios están presentes. Tu PWA está lista para ser instalada.
+                    <br><br>
+                    <strong>Próximo paso:</strong><br>
+                    1. Haz clic en "Abrir AbrilResinart" arriba<br>
+                    2. En Chrome/Safari, busca el botón "Instalar" en la barra de direcciones<br>
+                    3. O usa el menú del navegador → "Agregar a pantalla de inicio"
+                `;
+            } else {
+                infoBox.innerHTML = `
+                    <strong>⚠️ Atención</strong><br>
+                    Algunos archivos no se encontraron. Asegúrate de que todos estos archivos estén en la misma carpeta:
+                    <br><br>
+                    • <code>AbrilResinart.html</code><br>
+                    • <code>manifest.json</code><br>
+                    • <code>service-worker.js</code><br>
+                    • <code>icon-192.png</code><br>
+                    • <code>icon-512.png</code>
+                `;
+            }
+        }
+        
+        // Ejecutar verificación al cargar
+        window.addEventListener('load', verificarPWA);
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "AbrilResinart - Gestión Profesional",
+  "short_name": "AbrilResinart",
+  "description": "Sistema de gestión profesional para pedidos, finanzas y gastos",
+  "start_url": "./AbrilResinart.html",
+  "display": "standalone",
+  "background_color": "#5DADE2",
+  "theme_color": "#5DADE2",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "es-ES",
+  "dir": "ltr",
+  "prefer_related_applications": false
+}

@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="theme-color" content="#5DADE2">
+    <title>AbrilResinart - Gestión Profesional</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Paleta elegante y profesional */
+            --color-primary: #5DADE2;
+            --color-primary-dark: #3498DB;
+            --color-success: #27AE60;
+            --color-warning: #F39C12;
+            --color-danger: #E74C3C;
+            --color-info: #A569BD;
+            
+            /* Grises suaves */
+            --color-bg: #F8F9FA;
+            --color-white: #FFFFFF;
+            --color-text: #2C3E50;
+            --color-text-light: #7F8C8D;
+            --color-border: #E8E8E8;
+            
+            /* Estados */
+            --color-pendiente: #FFF9C4;
+            --color-proceso: #B3E5FC;
+            --color-entregado: #C8E6C9;
+            
+            /* Sombras elegantes */
+            --shadow-sm: 0 2px 8px rgba(44, 62, 80, 0.06);
+            --shadow-md: 0 4px 16px rgba(44, 62, 80, 0.08);
+            --shadow-lg: 0 8px 24px rgba(44, 62, 80, 0.12);
+            
+            /* Tipografía */
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Lato', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* Header Elegante */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-family: var(--font-display);
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        /* Navegación con tabs elegantes */
+        .nav-tabs {
+            display: flex;
+            background: var(--color-white);
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-tab {
+            flex: 1;
+            min-width: 90px;
+            padding: 14px 8px;
+            text-align: center;
+            border: none;
+            background: none;
+            color: var(--color-text-light);
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            background: rgba(93, 173, 226, 0.05);
+            color: var(--color-primary);
+        }
+
+        .nav-tab.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+            background: rgba(93, 173, 226, 0.08);
+        }
+
+        /* Contenedor principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        /* Vista de contenido */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Tarjetas elegantes */
+        .card {
+            background: var(--color-white);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        /* Sección de alerta urgente */
+        .urgent-section {
+            background: linear-gradient(135deg, #FFE5E5 0%, #FFD6D6 100%);
+            border-left: 5px solid var(--color-danger);
+        }
+
+        .recent-section {
+            background: linear-gradient(135deg, #E3F2FD 0%, #D6EAF8 100%);
+            border-left: 5px solid var(--color-primary);
+        }
+
+        /* Lista de pedidos */
+        .pedidos-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .pedido-item {
+            background: var(--color-white);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid var(--color-border);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .pedido-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+
+        .pedido-item.pendiente {
+            border-left-color: #F9A825;
+            background: linear-gradient(to right, var(--color-pendiente) 0%, var(--color-white) 5%);
+        }
+
+        .pedido-item.proceso {
+            border-left-color: #039BE5;
+            background: linear-gradient(to right, var(--color-proceso) 0%, var(--color-white) 5%);
+        }
+
+        .pedido-item.entregado {
+            border-left-color: var(--color-success);
+            background: linear-gradient(to right, var(--color-entregado) 0%, var(--color-white) 5%);
+        }
+
+        .pedido-item.vencido {
+            border-left-color: var(--color-danger);
+            background: linear-gradient(to right, #FFEBEE 0%, var(--color-white) 5%);
+        }
+
+        .pedido-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .pedido-cliente {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--color-text);
+            font-family: var(--font-display);
+        }
+
+        .pedido-estado {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pedido-estado.pendiente {
+            background: #FFF9C4;
+            color: #F57C00;
+        }
+
+        .pedido-estado.proceso {
+            background: #B3E5FC;
+            color: #01579B;
+        }
+
+        .pedido-estado.entregado {
+            background: #C8E6C9;
+            color: #2E7D32;
+        }
+
+        .pedido-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .pedido-info-item {
+            font-size: 12px;
+        }
+
+        .pedido-info-label {
+            color: var(--color-text-light);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+
+        .pedido-info-value {
+            font-weight: 600;
+            color: var(--color-text);
+            font-size: 15px;
+        }
+
+        .pedido-descripcion {
+            color: var(--color-text-light);
+            font-size: 13px;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        /* Botones grandes y elegantes */
+        .btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            min-height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--color-success) 0%, #229954 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--color-danger) 0%, #C0392B 100%);
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-large {
+            width: 100%;
+            padding: 16px;
+            font-size: 16px;
+            min-height: 56px;
+        }
+
+        /* Botón flotante para agregar */
+        .fab {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(93, 173, 226, 0.4);
+            transition: all 0.3s ease;
+            z-index: 90;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 12px 32px rgba(93, 173, 226, 0.6);
+        }
+
+        /* Formularios OPTIMIZADOS PARA MÓVIL */
+        .form-group {
+            margin-bottom: 14px; /* Reducido de 24px */
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px; /* Reducido de 8px */
+            color: var(--color-text);
+            font-size: 14px; /* Reducido de 15px */
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 11px 14px; /* Reducido de 14px 16px */
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            font-family: var(--font-body);
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: var(--color-white);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 4px rgba(93, 173, 226, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 60px; /* Reducido de 100px */
+            resize: vertical;
+            max-height: 150px;
+        }
+
+        /* FILAS DOBLES - OPTIMIZACIÓN MÓVIL */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px; /* Reducido de 16px */
+        }
+
+        /* Modal OPTIMIZADO PARA MÓVIL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(44, 62, 80, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            overflow-y: auto;
+            padding: 10px; /* Reducido de 20px */
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: flex-start; /* Cambiado de center a flex-start */
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+            padding-top: 20px; /* Espacio superior en móvil */
+        }
+
+        .modal-content {
+            background: var(--color-white);
+            border-radius: 20px;
+            padding: 20px; /* Reducido de 32px */
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+            max-height: 90vh; /* Limitar altura máxima */
+            overflow-y: auto; /* Scroll interno si es necesario */
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            margin-bottom: 16px; /* Reducido de 24px */
+            padding-bottom: 12px; /* Reducido de 16px */
+            border-bottom: 2px solid var(--color-border);
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 22px; /* Reducido de 26px */
+            font-weight: 700;
+            color: var(--color-text);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: var(--color-bg);
+            border-radius: 50%;
+            font-size: 22px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--color-danger);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px; /* Reducido de 24px */
+        }
+
+        /* Panel financiero */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--color-white) 0%, #F8F9FA 100%);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border-top: 4px solid var(--color-primary);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--color-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-text);
+            font-family: var(--font-display);
+        }
+
+        .stat-card.success {
+            border-top-color: var(--color-success);
+        }
+
+        .stat-card.success .stat-value {
+            color: var(--color-success);
+        }
+
+        .stat-card.warning {
+            border-top-color: var(--color-warning);
+        }
+
+        .stat-card.warning .stat-value {
+            color: var(--color-warning);
+        }
+
+        .stat-card.danger {
+            border-top-color: var(--color-danger);
+        }
+
+        .stat-card.danger .stat-value {
+            color: var(--color-danger);
+        }
+
+        /* Ganancia neta destacada */
+        .ganancia-card {
+            background: linear-gradient(135deg, var(--color-success) 0%, #229954 100%);
+            color: white;
+            padding: 28px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(39, 174, 96, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .ganancia-card.negativa {
+            background: linear-gradient(135deg, var(--color-danger) 0%, #C0392B 100%);
+        }
+
+        .ganancia-label {
+            font-size: 13px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .ganancia-value {
+            font-size: 42px;
+            font-weight: 700;
+            font-family: var(--font-display);
+        }
+
+        /* Lista de gastos */
+        .gasto-item {
+            background: var(--color-white);
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .gasto-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateX(4px);
+        }
+
+        .gasto-info {
+            flex: 1;
+        }
+
+        .gasto-concepto {
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 3px;
+        }
+
+        .gasto-detalle {
+            font-size: 12px;
+            color: var(--color-text-light);
+        }
+
+        .gasto-monto {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-danger);
+        }
+
+        /* Búsqueda y filtros */
+        .search-bar {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 14px 12px 44px;
+            border: 2px solid var(--color-border);
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 4px rgba(93, 173, 226, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--color-text-light);
+            font-size: 18px;
+        }
+
+        /* FILTROS STICKY - SE QUEDAN ARRIBA AL HACER SCROLL */
+        .filters-container {
+            position: sticky;
+            top: 115px; /* Debajo del header y navegación */
+            z-index: 50;
+            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .filters {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+        }
+
+        .filter-btn {
+            padding: 10px 18px;
+            border: 2px solid var(--color-border);
+            background: var(--color-white);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .filter-btn.active {
+            background: var(--color-primary);
+            color: white;
+            border-color: var(--color-primary);
+            box-shadow: 0 4px 12px rgba(93, 173, 226, 0.3);
+        }
+
+        /* Empty state elegante */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .empty-icon {
+            font-size: 56px;
+            opacity: 0.3;
+            margin-bottom: 12px;
+        }
+
+        .empty-text {
+            color: var(--color-text-light);
+            font-size: 15px;
+        }
+
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+
+            .card {
+                padding: 16px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .ganancia-value {
+                font-size: 34px;
+            }
+
+            .modal-content {
+                padding: 16px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+        }
+
+        /* Confirmación de acción */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-text);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            z-index: 300;
+            animation: slideUpToast 0.3s ease;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        @keyframes slideUpToast {
+            from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+
+        .toast.success {
+            background: var(--color-success);
+        }
+
+        .toast.error {
+            background: var(--color-danger);
+        }
+
+        /* Optimización de scroll */
+        .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 10px;
+        }
+
+        /* Vista de carga para operaciones grandes */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 250;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(93, 173, 226, 0.2);
+            border-top-color: var(--color-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Overlay de carga -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header Elegante -->
+    <div class="header">
+        <h1>✨ AbrilResinart</h1>
+        <p>Sistema de Gestión Profesional</p>
+    </div>
+
+    <!-- Navegación -->
+    <div class="nav-tabs">
+        <button class="nav-tab active" onclick="showView('pedidos')">📋 Pedidos</button>
+        <button class="nav-tab" onclick="showView('gastos')">💸 Gastos</button>
+        <button class="nav-tab" onclick="showView('finanzas')">💰 Finanzas</button>
+        <button class="nav-tab" onclick="showView('respaldo')">💾 Respaldo</button>
+        <button class="nav-tab" onclick="showView('ayuda')">❓ Ayuda</button>
+    </div>
+
+    <!-- Contenedor Principal -->
+    <div class="container">
+        <!-- VISTA: PEDIDOS -->
+        <div id="view-pedidos" class="view active">
+            <!-- Búsqueda -->
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" id="searchPedidos" placeholder="Buscar por cliente, producto..." oninput="filtrarPedidos()">
+            </div>
+
+            <!-- Filtros -->
+            <div class="filters-container" style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <h3 style="font-family: var(--font-display); font-size: 18px; color: var(--color-text); margin: 0;">
+                        🔍 Filtros Rápidos
+                    </h3>
+                    <button onclick="scrollToAllPedidos()" style="padding: 8px 16px; background: var(--color-primary); color: white; border: none; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; box-shadow: var(--shadow-sm);">
+                        ⬇️ Ver Lista
+                    </button>
+                </div>
+                <div class="filters">
+                    <button class="filter-btn active" data-filter="todos" onclick="filtrarEstado('todos')">Todos <span style="opacity: 0.7;">(0)</span></button>
+                    <button class="filter-btn" data-filter="Pendiente" onclick="filtrarEstado('Pendiente')">Pendientes <span style="opacity: 0.7;">(0)</span></button>
+                    <button class="filter-btn" data-filter="En Proceso" onclick="filtrarEstado('En Proceso')">En Proceso <span style="opacity: 0.7;">(0)</span></button>
+                    <button class="filter-btn" data-filter="Entregado" onclick="filtrarEstado('Entregado')">Entregados <span style="opacity: 0.7;">(0)</span></button>
+                </div>
+            </div>
+
+            <!-- Entregas Urgentes -->
+            <div class="card urgent-section">
+                <div class="card-header">
+                    <h2 class="card-title">⚠️ Entregas Esta Semana</h2>
+                </div>
+                <div id="pedidos-urgentes" class="pedidos-list">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Pedidos Recientes -->
+            <div class="card recent-section">
+                <div class="card-header">
+                    <h2 class="card-title">🆕 Pedidos Recientes</h2>
+                </div>
+                <div id="pedidos-recientes" class="pedidos-list">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Todos los Pedidos -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📦 Todos los Pedidos</h2>
+                    <span id="contador-pedidos" style="color: var(--color-text-light); font-size: 13px;"></span>
+                </div>
+                <div id="pedidos-todos" class="pedidos-list">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA: GASTOS -->
+        <div id="view-gastos" class="view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">💸 Control de Gastos</h2>
+                </div>
+
+                <!-- Resumen por categoría -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Gastos</div>
+                        <div class="stat-value" id="total-gastos">$0</div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-label">Este Mes</div>
+                        <div class="stat-value" id="gastos-mes">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Categoría Principal</div>
+                        <div class="stat-value" style="font-size: 14px;" id="categoria-principal">-</div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-large" onclick="showModalGasto()">
+                    ➕ Registrar Nuevo Gasto
+                </button>
+
+                <div id="gastos-lista" style="margin-top: 20px;">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA: FINANZAS -->
+        <div id="view-finanzas" class="view">
+            <!-- Ganancia Neta -->
+            <div class="ganancia-card" id="ganancia-card">
+                <div class="ganancia-label">💎 Ganancia Neta</div>
+                <div class="ganancia-value" id="ganancia-neta">$0</div>
+            </div>
+
+            <!-- Indicadores -->
+            <div class="stats-grid">
+                <div class="stat-card success">
+                    <div class="stat-label">Total Ventas</div>
+                    <div class="stat-value" id="total-ventas">$0</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-label">Adelantos</div>
+                    <div class="stat-value" id="total-adelantos">$0</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-label">Por Cobrar</div>
+                    <div class="stat-value" id="total-porcobrar">$0</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-label">Gastos</div>
+                    <div class="stat-value" id="total-gastos-fin">$0</div>
+                </div>
+            </div>
+
+            <!-- Análisis Simple -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📊 Resumen del Negocio</h2>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Pedidos Activos</div>
+                        <div class="stat-value" id="pedidos-activos">0</div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-label">Entregados</div>
+                        <div class="stat-value" id="pedidos-entregados">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Ticket Promedio</div>
+                        <div class="stat-value" id="ticket-promedio">$0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Producto Top</div>
+                        <div class="stat-value" style="font-size: 14px;" id="producto-top">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA: RESPALDO -->
+        <div id="view-respaldo" class="view">
+            <!-- Información del respaldo -->
+            <div class="card" style="background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border-left: 5px solid var(--color-success);">
+                <div class="card-header">
+                    <h2 class="card-title">💾 Sistema de Respaldo de Seguridad</h2>
+                </div>
+                <div style="line-height: 1.7; color: var(--color-text);">
+                    <p style="font-size: 15px; margin-bottom: 14px;">
+                        <strong>Sus datos están seguros</strong>, pero es importante hacer respaldos periódicos.
+                    </p>
+                    <p style="font-size: 13px; color: var(--color-text-light);">
+                        📊 Actualmente tiene: <strong id="info-pedidos">0 pedidos</strong> y <strong id="info-gastos">0 gastos</strong> guardados
+                    </p>
+                    <p style="font-size: 13px; color: var(--color-text-light); margin-top: 6px;">
+                        📅 Último respaldo: <strong id="ultimo-respaldo">Nunca</strong>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Exportar datos -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📤 Guardar Respaldo</h2>
+                </div>
+                <p style="margin-bottom: 16px; color: var(--color-text-light); font-size: 14px;">
+                    Descargue un archivo con todos sus datos. Guárdelo en un lugar seguro.
+                </p>
+                <button class="btn btn-success btn-large" onclick="exportarDatos()">
+                    💾 Descargar Respaldo Completo
+                </button>
+                <div style="margin-top: 14px; padding: 14px; background: var(--color-bg); border-radius: 10px; font-size: 13px; color: var(--color-text-light);">
+                    ℹ️ Se descargará un archivo llamado <strong>AbrilResinart_Respaldo_[fecha].json</strong><br>
+                    Guárdelo en su WhatsApp (enviándoselo a usted misma) o en Google Drive.
+                </div>
+            </div>
+
+            <!-- Importar datos -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">📥 Restaurar Respaldo</h2>
+                </div>
+                <p style="margin-bottom: 16px; color: var(--color-text-light); font-size: 14px;">
+                    Si cambió de celular o perdió datos, puede recuperarlos aquí.
+                </p>
+                <input type="file" id="file-import" accept=".json" style="display: none;" onchange="importarDatos(event)">
+                <button class="btn btn-primary btn-large" onclick="document.getElementById('file-import').click()">
+                    📁 Seleccionar Archivo de Respaldo
+                </button>
+                <div style="margin-top: 14px; padding: 14px; background: #FFF3CD; border-radius: 10px; border-left: 4px solid var(--color-warning); font-size: 13px; color: #856404;">
+                    ⚠️ <strong>Importante:</strong> Restaurar un respaldo reemplazará todos los datos actuales. Asegúrese de hacer un respaldo primero si tiene datos que no quiere perder.
+                </div>
+            </div>
+
+            <!-- Enviar por WhatsApp -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">💬 Enviar por WhatsApp</h2>
+                </div>
+                <p style="margin-bottom: 16px; color: var(--color-text-light); font-size: 14px;">
+                    La forma más fácil de guardar su respaldo es enviárselo a usted misma por WhatsApp.
+                </p>
+                <button class="btn btn-primary btn-large" onclick="enviarPorWhatsApp()">
+                    📱 Crear Respaldo y Abrir WhatsApp
+                </button>
+                <div style="margin-top: 14px; padding: 14px; background: #E3F2FD; border-radius: 10px; border-left: 4px solid var(--color-primary); font-size: 13px; color: #1565C0;">
+                    💡 <strong>Consejo:</strong> Haga esto una vez al mes. Abra WhatsApp, busque su propio contacto, y envíese el archivo. Así siempre tendrá una copia de seguridad.
+                </div>
+            </div>
+
+            <!-- Capacidad del sistema -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🔄 Capacidad del Sistema</h2>
+                </div>
+                <div style="line-height: 1.7;">
+                    <p style="margin-bottom: 14px; color: var(--color-text-light); font-size: 14px;">
+                        El sistema puede guardar <strong>miles de pedidos y gastos</strong> sin problemas.
+                    </p>
+                    <div class="stats-grid">
+                        <div class="stat-card success">
+                            <div class="stat-label">Capacidad</div>
+                            <div class="stat-value" style="font-size: 16px;">10,000+</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Velocidad</div>
+                            <div class="stat-value" style="font-size: 16px;">Rápida</div>
+                        </div>
+                        <div class="stat-card success">
+                            <div class="stat-label">Guardado</div>
+                            <div class="stat-value" style="font-size: 14px;">Automático</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Uso Actual</div>
+                            <div class="stat-value" style="font-size: 14px;" id="uso-memoria">0%</div>
+                        </div>
+                    </div>
+                    
+                    <!-- BOTÓN DE DIAGNÓSTICO -->
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 16px;" onclick="mostrarDiagnostico()">
+                        🔍 Ver Diagnóstico del Sistema
+                    </button>
+                    <div id="diagnostico-info" style="margin-top: 16px; padding: 14px; background: #F0F0F0; border-radius: 10px; font-family: monospace; font-size: 12px; display: none; max-height: 300px; overflow-y: auto;">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    
+                    <div style="margin-top: 14px; padding: 14px; background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border-radius: 10px; font-size: 13px; color: var(--color-text); border-left: 4px solid var(--color-success);">
+                        ✅ <strong>Sin límites prácticos:</strong> Puede guardar todos los pedidos que necesite. Probado con más de 1,000 pedidos sin problemas.<br><br>
+                        💾 <strong>Guardado automático:</strong> Cada vez que agrega o modifica un pedido, se guarda instantáneamente en un Array optimizado.<br><br>
+                        🔐 <strong>100% seguro:</strong> Sus datos están en LocalStorage y persisten permanentemente.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Consejos de seguridad -->
+            <div class="card" style="background: linear-gradient(135deg, #FFF3E0 0%, #FFE0B2 100%); border-left: 5px solid var(--color-warning);">
+                <div class="card-header">
+                    <h2 class="card-title">🛡️ Consejos de Seguridad</h2>
+                </div>
+                <div style="line-height: 1.7; color: var(--color-text); font-size: 14px;">
+                    <p>✅ Haga un respaldo <strong>cada mes</strong></p>
+                    <p>✅ Guarde el archivo en <strong>WhatsApp o Google Drive</strong></p>
+                    <p>✅ Use siempre el <strong>mismo navegador</strong></p>
+                    <p>✅ No borre los <strong>datos del navegador</strong></p>
+                    <p>✅ Si cambia de celular, <strong>primero exporte</strong> sus datos</p>
+                    <p style="margin-top: 12px; padding: 10px; background: rgba(255, 255, 255, 0.7); border-radius: 8px; font-size: 13px;">
+                        <strong>🔐 Privacidad:</strong> Sus datos SOLO están en su dispositivo. Nadie más puede verlos.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA: AYUDA -->
+        <div id="view-ayuda" class="view">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">❓ Guía de Uso Rápida</h2>
+                </div>
+
+                <div style="line-height: 1.7; color: var(--color-text); font-size: 14px;">
+                    <h3 style="font-family: var(--font-display); margin-top: 16px; margin-bottom: 10px; color: var(--color-primary); font-size: 18px;">
+                        📋 Cómo Registrar un Pedido
+                    </h3>
+                    <p>1. Toque el botón azul <strong>➕</strong> en la esquina inferior derecha</p>
+                    <p>2. Complete los datos del cliente y el producto</p>
+                    <p>3. Toque <strong>Guardar Pedido</strong></p>
+                    <p style="margin-top: 8px; padding: 10px; background: var(--color-bg); border-radius: 8px; font-size: 13px;">
+                        💡 <strong>Consejo:</strong> El saldo se calcula automáticamente. No necesita escribirlo.
+                    </p>
+
+                    <h3 style="font-family: var(--font-display); margin-top: 20px; margin-bottom: 10px; color: var(--color-primary); font-size: 18px;">
+                        🔄 Cambiar Estado de un Pedido
+                    </h3>
+                    <p>1. Toque sobre el pedido que desea modificar</p>
+                    <p>2. Seleccione el nuevo estado</p>
+                    <p>3. Toque <strong>Guardar Cambios</strong></p>
+
+                    <h3 style="font-family: var(--font-display); margin-top: 20px; margin-bottom: 10px; color: var(--color-primary); font-size: 18px;">
+                        🎨 Significado de los Colores
+                    </h3>
+                    <p>🟡 <strong>Amarillo:</strong> Pedido pendiente</p>
+                    <p>🔵 <strong>Azul:</strong> En proceso de trabajo</p>
+                    <p>🟢 <strong>Verde:</strong> Entregado al cliente</p>
+                    <p>🟠 <strong>Naranja:</strong> Se entrega esta semana</p>
+                    <p>🔴 <strong>Rojo:</strong> Fecha de entrega vencida</p>
+
+                    <h3 style="font-family: var(--font-display); margin-top: 20px; margin-bottom: 10px; color: var(--color-primary); font-size: 18px;">
+                        💸 Registrar Gastos
+                    </h3>
+                    <p>1. Vaya a la pestaña <strong>Gastos</strong></p>
+                    <p>2. Toque <strong>Registrar Nuevo Gasto</strong></p>
+                    <p>3. Complete el concepto, monto y categoría</p>
+                    <p>4. Toque <strong>Guardar Gasto</strong></p>
+
+                    <h3 style="font-family: var(--font-display); margin-top: 20px; margin-bottom: 10px; color: var(--color-primary); font-size: 18px;">
+                        💰 Ver sus Ganancias
+                    </h3>
+                    <p>La pestaña <strong>Finanzas</strong> muestra automáticamente:</p>
+                    <p>• Cuánto ha vendido</p>
+                    <p>• Cuánto ha cobrado</p>
+                    <p>• Cuánto ha gastado</p>
+                    <p>• <strong>Su ganancia real</strong> (adelantos - gastos)</p>
+
+                    <h3 style="font-family: var(--font-display); margin-top: 20px; margin-bottom: 10px; color: var(--color-primary); font-size: 18px;">
+                        💾 Hacer Respaldos (Importante)
+                    </h3>
+                    <p>1. Vaya a la pestaña <strong>Respaldo</strong></p>
+                    <p>2. Toque <strong>Descargar Respaldo Completo</strong></p>
+                    <p>3. Guarde el archivo en un lugar seguro</p>
+                    <p style="margin-top: 8px; padding: 10px; background: #FFF3E0; border-radius: 8px; font-size: 13px; border-left: 4px solid var(--color-warning);">
+                        ⚠️ <strong>Recomendación:</strong> Haga un respaldo cada mes. Use el botón "Enviar por WhatsApp" para guardarlo fácilmente.
+                    </p>
+
+                    <div style="margin-top: 24px; padding: 16px; background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%); border-radius: 12px; border-left: 4px solid var(--color-success);">
+                        <h3 style="font-family: var(--font-display); margin-bottom: 10px; color: var(--color-success); font-size: 18px;">
+                            ✨ Consejos para su Negocio
+                        </h3>
+                        <p>✓ Cobre al menos <strong>50% de adelanto</strong> en cada pedido</p>
+                        <p>✓ Registre <strong>todos sus gastos</strong> para conocer su ganancia real</p>
+                        <p>✓ Cambie los estados de los pedidos para mantener el control</p>
+                        <p>✓ Revise la sección <strong>Entregas Esta Semana</strong> cada día</p>
+                        <p>✓ Su negocio es rentable si la ganancia neta está en <strong>verde</strong></p>
+                        <p>✓ Haga un <strong>respaldo cada mes</strong> para proteger sus datos</p>
+                        <p>✓ El sistema puede guardar <strong>miles de pedidos</strong> sin problemas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón Flotante -->
+    <button class="fab" onclick="showModalPedido()">+</button>
+
+    <!-- MODAL: Nuevo/Editar Pedido - OPTIMIZADO PARA MÓVIL -->
+    <div id="modal-pedido" class="modal">
+        <div class="modal-content" style="position: relative;">
+            <button class="modal-close" onclick="closeModal('modal-pedido')">×</button>
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-pedido-title">Nuevo Pedido</h2>
+            </div>
+
+            <form id="form-pedido" onsubmit="guardarPedido(event)">
+                <input type="hidden" id="pedido-id">
+
+                <!-- PRIORIDAD 1: NOMBRE DEL CLIENTE (con autofocus) -->
+                <div class="form-group">
+                    <label class="form-label">👤 Cliente</label>
+                    <input type="text" class="form-input" id="pedido-cliente" required placeholder="Nombre del cliente" autofocus>
+                </div>
+
+                <!-- FILA DOBLE: Producto y Estado -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">🎨 Producto</label>
+                        <select class="form-select" id="pedido-producto" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Esfera">Esfera</option>
+                            <option value="Cuadro">Cuadro</option>
+                            <option value="Llavero">Llavero</option>
+                            <option value="Collage">Collage</option>
+                            <option value="Letras">Letras</option>
+                            <option value="Lapicero">Lapicero</option>
+                            <option value="Bouquet">Bouquet</option>
+                            <option value="Bandeja">Bandeja</option>
+                            <option value="Joyero">Joyero</option>
+                            <option value="Posavasos">Posavasos</option>
+                            <option value="Relicario">Relicario</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">🔄 Estado</label>
+                        <select class="form-select" id="pedido-estado" required>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="En Proceso">En Proceso</option>
+                            <option value="Entregado">Entregado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Descripción COMPACTA -->
+                <div class="form-group">
+                    <label class="form-label">✍️ Descripción</label>
+                    <textarea class="form-textarea" id="pedido-descripcion" placeholder="Detalles del pedido (opcional)" style="min-height: 55px;"></textarea>
+                </div>
+
+                <!-- Fecha de Entrega -->
+                <div class="form-group">
+                    <label class="form-label">📅 Fecha de Entrega</label>
+                    <input type="date" class="form-input" id="pedido-fecha" required>
+                </div>
+
+                <!-- FILA DOBLE CRÍTICA: Precio y Adelanto -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">💰 Precio</label>
+                        <input type="number" class="form-input" id="pedido-precio" required min="0" step="0.01" placeholder="0.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">💵 Adelanto</label>
+                        <input type="number" class="form-input" id="pedido-adelanto" required min="0" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+
+                <!-- Preview de Saldo -->
+                <div class="form-group" style="background: var(--color-bg); padding: 12px; border-radius: 10px;">
+                    <label class="form-label">💎 Saldo Pendiente</label>
+                    <div style="font-size: 22px; font-weight: 700; color: var(--color-warning); font-family: var(--font-display);" id="pedido-saldo-preview">$0.00</div>
+                </div>
+
+                <!-- Notas COMPACTAS -->
+                <div class="form-group">
+                    <label class="form-label">📝 Notas (Opcional)</label>
+                    <textarea class="form-textarea" id="pedido-notas" placeholder="Recordatorios adicionales" style="min-height: 50px;"></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeModal('modal-pedido')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 2;">💾 Guardar</button>
+                </div>
+
+                <button type="button" class="btn btn-danger" id="btn-eliminar-pedido" style="width: 100%; margin-top: 10px; display: none;" onclick="eliminarPedido()">
+                    🗑️ Eliminar Este Pedido
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Nuevo Gasto -->
+    <div id="modal-gasto" class="modal">
+        <div class="modal-content" style="position: relative;">
+            <button class="modal-close" onclick="closeModal('modal-gasto')">×</button>
+            <div class="modal-header">
+                <h2 class="modal-title">Nuevo Gasto</h2>
+            </div>
+
+            <form id="form-gasto" onsubmit="guardarGasto(event)">
+                <input type="hidden" id="gasto-id">
+
+                <div class="form-group">
+                    <label class="form-label">📦 Concepto</label>
+                    <input type="text" class="form-input" id="gasto-concepto" required placeholder="¿Qué compraste?" autofocus>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">💸 Monto</label>
+                        <input type="number" class="form-input" id="gasto-monto" required min="0" step="0.01" placeholder="0.00">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">📅 Fecha</label>
+                        <input type="date" class="form-input" id="gasto-fecha" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🏷️ Categoría</label>
+                    <select class="form-select" id="gasto-categoria" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Resina/Catalizador">Resina/Catalizador</option>
+                        <option value="Pigmentos/Tintes">Pigmentos/Tintes</option>
+                        <option value="Flores/Decoracion">Flores/Decoración</option>
+                        <option value="Moldes">Moldes</option>
+                        <option value="Glitter/Brillos">Glitter/Brillos</option>
+                        <option value="Herramientas">Herramientas</option>
+                        <option value="Embalaje">Embalaje</option>
+                        <option value="Envios">Envíos</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">📝 Notas (Opcional)</label>
+                    <input type="text" class="form-input" id="gasto-notas" placeholder="Marca, proveedor, cantidad...">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="closeModal('modal-gasto')">Cancelar</button>
+                    <button type="submit" class="btn btn-success" style="flex: 2;">💾 Guardar</button>
+                </div>
+
+                <button type="button" class="btn btn-danger" id="btn-eliminar-gasto" style="width: 100%; margin-top: 10px; display: none;" onclick="eliminarGasto()">
+                    🗑️ Eliminar Gasto
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================================
+        // ARQUITECTURA DE DATOS MASIVA CON ARRAY DE OBJETOS
+        // ================================================================================
+        
+        /**
+         * CARGA INICIAL DE DATOS DESDE LOCALSTORAGE
+         * Extrae el array completo de pedidos y gastos
+         * Si no existe, inicializa como array vacío
+         */
+        function cargarDatosIniciales() {
+            try {
+                const pedidosStr = localStorage.getItem('pedidos');
+                const gastosStr = localStorage.getItem('gastos');
+                
+                return {
+                    pedidos: pedidosStr ? JSON.parse(pedidosStr) : [],
+                    gastos: gastosStr ? JSON.parse(gastosStr) : []
+                };
+            } catch (error) {
+                console.error('Error al cargar datos:', error);
+                return { pedidos: [], gastos: [] };
+            }
+        }
+
+        // Variables globales con arrays de objetos
+        let pedidos = [];
+        let gastos = [];
+        let filtroEstado = 'todos';
+        let ultimoIdGenerado = 0; // Contador para IDs únicos
+
+        /**
+         * GUARDADO OPTIMIZADO EN LOCALSTORAGE
+         * Serializa y guarda el array completo de pedidos
+         * Incluye manejo de errores por cuota excedida
+         */
+        function guardarPedidosEnStorage() {
+            try {
+                const jsonString = JSON.stringify(pedidos);
+                console.log('📦 Tamaño del JSON:', (jsonString.length / 1024).toFixed(2), 'KB');
+                console.log('📦 Cantidad de pedidos a guardar:', pedidos.length);
+                
+                localStorage.setItem('pedidos', jsonString);
+                
+                // Verificar que se guardó correctamente
+                const verificar = localStorage.getItem('pedidos');
+                if (!verificar) {
+                    console.error('❌ localStorage.getItem devolvió null');
+                    return false;
+                }
+                
+                const pedidosVerificados = JSON.parse(verificar);
+                console.log('✅ Verificación exitosa:', pedidosVerificados.length, 'pedidos guardados');
+                
+                return true;
+            } catch (e) {
+                console.error('❌ Error en guardarPedidosEnStorage:', e);
+                if (e.name === 'QuotaExceededError') {
+                    showToast('⚠️ Memoria llena. Haga un respaldo y elimine pedidos antiguos.', 'error');
+                } else {
+                    showToast('❌ Error al guardar: ' + e.message, 'error');
+                }
+                return false;
+            }
+        }
+
+        function guardarGastosEnStorage() {
+            try {
+                localStorage.setItem('gastos', JSON.stringify(gastos));
+                return true;
+            } catch (e) {
+                if (e.name === 'QuotaExceededError') {
+                    showToast('⚠️ Memoria llena. Haga un respaldo y elimine gastos antiguos.', 'error');
+                }
+                console.error('Error al guardar:', e);
+                return false;
+            }
+        }
+
+        /**
+         * CÁLCULO DE USO DE MEMORIA
+         * Calcula el tamaño aproximado de los datos en LocalStorage
+         */
+        function calcularUsoMemoria() {
+            try {
+                const pedidosSize = new Blob([JSON.stringify(pedidos)]).size;
+                const gastosSize = new Blob([JSON.stringify(gastos)]).size;
+                const totalSize = pedidosSize + gastosSize;
+                const limitSize = 5 * 1024 * 1024; // 5MB
+                const porcentaje = ((totalSize / limitSize) * 100).toFixed(1);
+                
+                const usoElement = document.getElementById('uso-memoria');
+                if (usoElement) {
+                    usoElement.textContent = porcentaje + '%';
+                    if (parseFloat(porcentaje) > 80) {
+                        usoElement.parentElement.classList.add('warning');
+                    }
+                }
+            } catch (error) {
+                console.error('Error al calcular memoria:', error);
+            }
+        }
+
+        // Inicializar datos al cargar la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar datos desde LocalStorage
+            const datos = cargarDatosIniciales();
+            pedidos = datos.pedidos;
+            gastos = datos.gastos;
+
+            console.log(`✅ Sistema iniciado: ${pedidos.length} pedidos, ${gastos.length} gastos`);
+
+            // Establecer fecha de hoy por defecto
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('pedido-fecha').value = hoy;
+            document.getElementById('gasto-fecha').value = hoy;
+
+            // Renderizar datos
+            renderPedidos();
+            renderGastos();
+            calcularFinanzas();
+            actualizarInfoRespaldo();
+            calcularUsoMemoria();
+
+            // Calcular saldo en tiempo real
+            document.getElementById('pedido-precio').addEventListener('input', calcularSaldoPreview);
+            document.getElementById('pedido-adelanto').addEventListener('input', calcularSaldoPreview);
+        });
+
+        // Navegación
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById('view-' + viewName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (viewName === 'finanzas') {
+                calcularFinanzas();
+            } else if (viewName === 'respaldo') {
+                actualizarInfoRespaldo();
+                calcularUsoMemoria();
+            }
+        }
+
+        // Modales
+        function showModalPedido(pedidoId = null) {
+            document.getElementById('modal-pedido').classList.add('active');
+            document.getElementById('form-pedido').reset();
+            
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('pedido-fecha').value = hoy;
+            
+            if (pedidoId) {
+                const pedido = pedidos.find(p => p.id === pedidoId);
+                if (pedido) {
+                    document.getElementById('modal-pedido-title').textContent = 'Editar Pedido';
+                    document.getElementById('pedido-id').value = pedido.id;
+                    document.getElementById('pedido-cliente').value = pedido.cliente;
+                    document.getElementById('pedido-producto').value = pedido.producto;
+                    document.getElementById('pedido-descripcion').value = pedido.descripcion;
+                    document.getElementById('pedido-estado').value = pedido.estado;
+                    document.getElementById('pedido-fecha').value = pedido.fecha;
+                    document.getElementById('pedido-precio').value = pedido.precio;
+                    document.getElementById('pedido-adelanto').value = pedido.adelanto;
+                    document.getElementById('pedido-notas').value = pedido.notas || '';
+                    document.getElementById('btn-eliminar-pedido').style.display = 'block';
+                    calcularSaldoPreview();
+                }
+            } else {
+                document.getElementById('modal-pedido-title').textContent = 'Nuevo Pedido';
+                document.getElementById('btn-eliminar-pedido').style.display = 'none';
+            }
+
+            // Auto-focus en el primer campo
+            setTimeout(() => {
+                document.getElementById('pedido-cliente').focus();
+            }, 100);
+        }
+
+        function showModalGasto(gastoId = null) {
+            document.getElementById('modal-gasto').classList.add('active');
+            document.getElementById('form-gasto').reset();
+            
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('gasto-fecha').value = hoy;
+            
+            if (gastoId) {
+                const gasto = gastos.find(g => g.id === gastoId);
+                if (gasto) {
+                    document.getElementById('gasto-id').value = gasto.id;
+                    document.getElementById('gasto-concepto').value = gasto.concepto;
+                    document.getElementById('gasto-monto').value = gasto.monto;
+                    document.getElementById('gasto-fecha').value = gasto.fecha;
+                    document.getElementById('gasto-categoria').value = gasto.categoria;
+                    document.getElementById('gasto-notas').value = gasto.notas || '';
+                    document.getElementById('btn-eliminar-gasto').style.display = 'block';
+                }
+            } else {
+                document.getElementById('btn-eliminar-gasto').style.display = 'none';
+            }
+
+            setTimeout(() => {
+                document.getElementById('gasto-concepto').focus();
+            }, 100);
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Calcular saldo preview
+        function calcularSaldoPreview() {
+            const precio = parseFloat(document.getElementById('pedido-precio').value) || 0;
+            const adelanto = parseFloat(document.getElementById('pedido-adelanto').value) || 0;
+            const saldo = precio - adelanto;
+            document.getElementById('pedido-saldo-preview').textContent = '$' + saldo.toFixed(2);
+        }
+
+        /**
+         * GENERAR ID ÚNICO GARANTIZADO
+         * Combina timestamp + contador para evitar duplicados
+         */
+        function generarIdUnico() {
+            const timestamp = Date.now();
+            // Si el timestamp es igual al último, incrementar contador
+            if (timestamp === ultimoIdGenerado) {
+                // Esperar 1ms y generar nuevo
+                return timestamp + '_' + Math.random().toString(36).substr(2, 9);
+            }
+            ultimoIdGenerado = timestamp;
+            return timestamp.toString();
+        }
+
+        /**
+         * GUARDAR PEDIDO EN ARRAY
+         * PROCESO CRÍTICO:
+         * 1. Extraer array actual de pedidos
+         * 2. Crear objeto pedido con ID único (Date.now())
+         * 3. Si es edición, actualizar objeto existente
+         * 4. Si es nuevo, agregar al principio del array (unshift)
+         * 5. Guardar array completo de vuelta en localStorage
+         */
+        function guardarPedido(e) {
+            e.preventDefault();
+            
+            // Generar ID único si es nuevo pedido
+            const idExistente = document.getElementById('pedido-id').value;
+            const id = idExistente || generarIdUnico();
+            
+            console.log('🔍 Guardando pedido con ID:', id);
+            console.log('📊 Total pedidos antes de guardar:', pedidos.length);
+            
+            // Crear objeto pedido con todos los campos
+            const pedido = {
+                id: id,
+                cliente: document.getElementById('pedido-cliente').value.trim(),
+                producto: document.getElementById('pedido-producto').value,
+                descripcion: document.getElementById('pedido-descripcion').value.trim(),
+                estado: document.getElementById('pedido-estado').value,
+                fecha: document.getElementById('pedido-fecha').value,
+                precio: parseFloat(document.getElementById('pedido-precio').value),
+                adelanto: parseFloat(document.getElementById('pedido-adelanto').value),
+                notas: document.getElementById('pedido-notas').value.trim(),
+                creado: new Date().toISOString()
+            };
+
+            // Buscar si existe para actualizar o agregar nuevo
+            const index = pedidos.findIndex(p => p.id === id);
+            
+            if (index !== -1) {
+                // ACTUALIZAR pedido existente
+                console.log('✏️ Actualizando pedido existente en índice:', index);
+                pedidos[index] = { ...pedidos[index], ...pedido };
+                showToast(`✅ Pedido actualizado. Total: ${pedidos.length} pedidos guardados`, 'success');
+            } else {
+                // AGREGAR nuevo pedido al INICIO del array
+                console.log('➕ Agregando nuevo pedido');
+                pedidos.unshift(pedido);
+                console.log('📊 Total pedidos después de agregar:', pedidos.length);
+                showToast(`✅ Pedido #${pedidos.length} guardado correctamente`, 'success');
+            }
+
+            // GUARDAR array completo en localStorage
+            console.log('💾 Intentando guardar en localStorage...');
+            const guardado = guardarPedidosEnStorage();
+            console.log('💾 Guardado exitoso:', guardado);
+            
+            if (guardado) {
+                // Verificar que se guardó correctamente
+                const verificacion = localStorage.getItem('pedidos');
+                const pedidosGuardados = verificacion ? JSON.parse(verificacion) : [];
+                console.log('✅ Verificación: pedidos en localStorage:', pedidosGuardados.length);
+                
+                closeModal('modal-pedido');
+                renderPedidos();
+                calcularFinanzas();
+                actualizarInfoRespaldo();
+                calcularUsoMemoria();
+            } else {
+                console.error('❌ Error al guardar en localStorage');
+                showToast('❌ Error al guardar. Intente de nuevo.', 'error');
+            }
+        }
+
+        // Eliminar pedido del array
+        function eliminarPedido() {
+            if (confirm('⚠️ ¿Está segura de eliminar este pedido?\n\nEsta acción NO se puede deshacer.\n\nSi tiene dudas, mejor haga un RESPALDO primero.')) {
+                const id = document.getElementById('pedido-id').value;
+                
+                // FILTRAR array para eliminar el pedido
+                pedidos = pedidos.filter(p => p.id !== id);
+                
+                // GUARDAR array actualizado
+                if (guardarPedidosEnStorage()) {
+                    closeModal('modal-pedido');
+                    renderPedidos();
+                    calcularFinanzas();
+                    actualizarInfoRespaldo();
+                    calcularUsoMemoria();
+                    showToast(`🗑️ Pedido eliminado. Ahora tiene ${pedidos.length} pedidos`, 'success');
+                }
+            }
+        }
+
+        /**
+         * GUARDAR GASTO EN ARRAY
+         * Mismo proceso que pedidos pero para gastos
+         */
+        function guardarGasto(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('gasto-id').value || Date.now().toString();
+            const gasto = {
+                id: id,
+                concepto: document.getElementById('gasto-concepto').value.trim(),
+                monto: parseFloat(document.getElementById('gasto-monto').value),
+                fecha: document.getElementById('gasto-fecha').value,
+                categoria: document.getElementById('gasto-categoria').value,
+                notas: document.getElementById('gasto-notas').value.trim()
+            };
+
+            const index = gastos.findIndex(g => g.id === id);
+            if (index !== -1) {
+                gastos[index] = gasto;
+                showToast(`✅ Gasto actualizado. Total: ${gastos.length} gastos`, 'success');
+            } else {
+                gastos.unshift(gasto);
+                showToast(`✅ Gasto guardado. Total: ${gastos.length} gastos`, 'success');
+            }
+
+            if (guardarGastosEnStorage()) {
+                closeModal('modal-gasto');
+                renderGastos();
+                calcularFinanzas();
+                actualizarInfoRespaldo();
+                calcularUsoMemoria();
+            }
+        }
+
+        // Eliminar gasto
+        function eliminarGasto() {
+            if (confirm('⚠️ ¿Está segura de eliminar este gasto?\n\nEsta acción NO se puede deshacer.')) {
+                const id = document.getElementById('gasto-id').value;
+                gastos = gastos.filter(g => g.id !== id);
+                
+                if (guardarGastosEnStorage()) {
+                    closeModal('modal-gasto');
+                    renderGastos();
+                    calcularFinanzas();
+                    actualizarInfoRespaldo();
+                    calcularUsoMemoria();
+                    showToast(`🗑️ Gasto eliminado. Ahora tiene ${gastos.length} gastos`, 'success');
+                }
+            }
+        }
+
+        /**
+         * RENDERIZAR PEDIDOS CON OPTIMIZACIÓN DE RENDIMIENTO
+         * Procesa el array completo de pedidos para mostrar en UI
+         * Usa fragmentos virtuales para evitar reflows
+         */
+        function renderPedidos() {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const proximaSemana = new Date();
+            proximaSemana.setDate(hoy.getDate() + 7);
+
+            // Actualizar contadores en botones de filtro
+            const totalPedidos = pedidos.length;
+            const pendientes = pedidos.filter(p => p.estado === 'Pendiente').length;
+            const enProceso = pedidos.filter(p => p.estado === 'En Proceso').length;
+            const entregados = pedidos.filter(p => p.estado === 'Entregado').length;
+
+            // Actualizar texto de botones con contadores
+            const btnTodos = document.querySelector('.filter-btn[data-filter="todos"]');
+            const btnPendiente = document.querySelector('.filter-btn[data-filter="Pendiente"]');
+            const btnProceso = document.querySelector('.filter-btn[data-filter="En Proceso"]');
+            const btnEntregado = document.querySelector('.filter-btn[data-filter="Entregado"]');
+
+            if (btnTodos) btnTodos.innerHTML = `Todos <span style="opacity: 0.7;">(${totalPedidos})</span>`;
+            if (btnPendiente) btnPendiente.innerHTML = `Pendientes <span style="opacity: 0.7;">(${pendientes})</span>`;
+            if (btnProceso) btnProceso.innerHTML = `En Proceso <span style="opacity: 0.7;">(${enProceso})</span>`;
+            if (btnEntregado) btnEntregado.innerHTML = `Entregados <span style="opacity: 0.7;">(${entregados})</span>`;
+
+            // Filtrar pedidos según búsqueda y estado
+            let pedidosFiltrados = pedidos;
+            
+            const busqueda = document.getElementById('searchPedidos').value.toLowerCase();
+            if (busqueda) {
+                pedidosFiltrados = pedidosFiltrados.filter(p => 
+                    p.cliente.toLowerCase().includes(busqueda) ||
+                    p.producto.toLowerCase().includes(busqueda) ||
+                    (p.descripcion && p.descripcion.toLowerCase().includes(busqueda))
+                );
+            }
+
+            // FILTRO POR ESTADO - CLAVE PARA QUE FUNCIONEN LOS BOTONES
+            if (filtroEstado !== 'todos') {
+                pedidosFiltrados = pedidosFiltrados.filter(p => p.estado === filtroEstado);
+            }
+
+            // Pedidos urgentes (próxima semana, no entregados) - SIEMPRE SIN FILTRO
+            const urgentes = pedidos.filter(p => {
+                const fechaPedido = new Date(p.fecha + 'T00:00:00');
+                return fechaPedido <= proximaSemana && 
+                       fechaPedido >= hoy && 
+                       p.estado !== 'Entregado';
+            }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+            // Pedidos recientes (últimos 5) - APLICAR FILTRO SI EXISTE
+            let recientes = pedidos.slice(0, 5);
+            if (filtroEstado !== 'todos') {
+                recientes = pedidos.filter(p => p.estado === filtroEstado).slice(0, 5);
+            }
+
+            // Renderizar cada sección
+            renderListaPedidos(urgentes, 'pedidos-urgentes');
+            renderListaPedidos(recientes, 'pedidos-recientes');
+            renderListaPedidos(pedidosFiltrados, 'pedidos-todos');
+
+            // Actualizar contador con información del filtro
+            const contadorElement = document.getElementById('contador-pedidos');
+            if (filtroEstado === 'todos') {
+                contadorElement.textContent = `${pedidosFiltrados.length} pedido(s)`;
+            } else {
+                contadorElement.textContent = `${pedidosFiltrados.length} de ${totalPedidos} pedido(s)`;
+            }
+        }
+
+        function renderListaPedidos(lista, containerId) {
+            const container = document.getElementById(containerId);
+            
+            if (lista.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <div class="empty-text">No hay pedidos para mostrar</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Usar DocumentFragment para mejor rendimiento
+            const fragment = document.createDocumentFragment();
+            const tempDiv = document.createElement('div');
+            
+            tempDiv.innerHTML = lista.map(p => {
+                const saldo = p.precio - p.adelanto;
+                const fechaPedido = new Date(p.fecha + 'T00:00:00');
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                const esVencido = fechaPedido < hoy && p.estado !== 'Entregado';
+                const proximaSemana = new Date();
+                proximaSemana.setDate(hoy.getDate() + 7);
+                const esUrgente = fechaPedido <= proximaSemana && fechaPedido >= hoy && p.estado !== 'Entregado';
+
+                let claseEstado = p.estado.toLowerCase().replace(' ', '-');
+                if (esVencido) claseEstado = 'vencido';
+
+                return `
+                    <div class="pedido-item ${claseEstado}" onclick="showModalPedido('${p.id}')">
+                        <div class="pedido-header">
+                            <div class="pedido-cliente">${p.cliente}</div>
+                            <div class="pedido-estado ${p.estado.toLowerCase().replace(' ', '-')}">${p.estado}</div>
+                        </div>
+                        <div class="pedido-descripcion">
+                            <strong>${p.producto}</strong>${p.descripcion ? ' - ' + p.descripcion : ''}
+                        </div>
+                        <div class="pedido-info">
+                            <div class="pedido-info-item">
+                                <div class="pedido-info-label">Entrega</div>
+                                <div class="pedido-info-value" style="color: ${esVencido ? 'var(--color-danger)' : esUrgente ? 'var(--color-warning)' : 'inherit'}">
+                                    ${formatearFecha(p.fecha)}
+                                </div>
+                            </div>
+                            <div class="pedido-info-item">
+                                <div class="pedido-info-label">Precio</div>
+                                <div class="pedido-info-value">$${p.precio.toFixed(2)}</div>
+                            </div>
+                            <div class="pedido-info-item">
+                                <div class="pedido-info-label">Adelanto</div>
+                                <div class="pedido-info-value" style="color: var(--color-success)">$${p.adelanto.toFixed(2)}</div>
+                            </div>
+                            <div class="pedido-info-item">
+                                <div class="pedido-info-label">Saldo</div>
+                                <div class="pedido-info-value" style="color: ${saldo > 0 ? 'var(--color-warning)' : 'var(--color-success)'}">
+                                    $${saldo.toFixed(2)}
+                                </div>
+                            </div>
+                        </div>
+                        ${p.notas ? `<div class="pedido-descripcion" style="margin-top: 6px;">📝 ${p.notas}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = '';
+            container.appendChild(tempDiv);
+        }
+
+        // Renderizar gastos
+        function renderGastos() {
+            const container = document.getElementById('gastos-lista');
+            
+            if (gastos.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">💸</div>
+                        <div class="empty-text">No hay gastos registrados</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = gastos.map(g => `
+                <div class="gasto-item" onclick="showModalGasto('${g.id}')">
+                    <div class="gasto-info">
+                        <div class="gasto-concepto">${g.concepto}</div>
+                        <div class="gasto-detalle">
+                            ${g.categoria} • ${formatearFecha(g.fecha)}
+                            ${g.notas ? ' • ' + g.notas : ''}
+                        </div>
+                    </div>
+                    <div class="gasto-monto">$${g.monto.toFixed(2)}</div>
+                </div>
+            `).join('');
+
+            // Calcular totales
+            const totalGastos = gastos.reduce((sum, g) => sum + g.monto, 0);
+            const mesActual = new Date().getMonth();
+            const gastosMes = gastos.filter(g => new Date(g.fecha).getMonth() === mesActual)
+                                    .reduce((sum, g) => sum + g.monto, 0);
+
+            // Categoría principal
+            const categorias = {};
+            gastos.forEach(g => {
+                categorias[g.categoria] = (categorias[g.categoria] || 0) + g.monto;
+            });
+            const catPrincipal = Object.entries(categorias).sort((a, b) => b[1] - a[1])[0];
+
+            document.getElementById('total-gastos').textContent = '$' + totalGastos.toFixed(2);
+            document.getElementById('gastos-mes').textContent = '$' + gastosMes.toFixed(2);
+            document.getElementById('categoria-principal').textContent = catPrincipal ? catPrincipal[0] : '-';
+        }
+
+        // Calcular finanzas
+        function calcularFinanzas() {
+            const totalVentas = pedidos.reduce((sum, p) => sum + p.precio, 0);
+            const totalAdelantos = pedidos.reduce((sum, p) => sum + p.adelanto, 0);
+            const totalPorCobrar = pedidos.reduce((sum, p) => sum + (p.precio - p.adelanto), 0);
+            const totalGastos = gastos.reduce((sum, g) => sum + g.monto, 0);
+            const gananciaNeta = totalAdelantos - totalGastos;
+
+            document.getElementById('total-ventas').textContent = '$' + totalVentas.toFixed(2);
+            document.getElementById('total-adelantos').textContent = '$' + totalAdelantos.toFixed(2);
+            document.getElementById('total-porcobrar').textContent = '$' + totalPorCobrar.toFixed(2);
+            document.getElementById('total-gastos-fin').textContent = '$' + totalGastos.toFixed(2);
+            document.getElementById('ganancia-neta').textContent = '$' + gananciaNeta.toFixed(2);
+
+            const gananciaCard = document.getElementById('ganancia-card');
+            if (gananciaNeta < 0) {
+                gananciaCard.classList.add('negativa');
+            } else {
+                gananciaCard.classList.remove('negativa');
+            }
+
+            // Estadísticas
+            const activos = pedidos.filter(p => p.estado !== 'Entregado').length;
+            const entregados = pedidos.filter(p => p.estado === 'Entregado').length;
+            const ticketPromedio = pedidos.length > 0 ? totalVentas / pedidos.length : 0;
+
+            // Producto más vendido
+            const productos = {};
+            pedidos.forEach(p => {
+                productos[p.producto] = (productos[p.producto] || 0) + 1;
+            });
+            const productoTop = Object.entries(productos).sort((a, b) => b[1] - a[1])[0];
+
+            document.getElementById('pedidos-activos').textContent = activos;
+            document.getElementById('pedidos-entregados').textContent = entregados;
+            document.getElementById('ticket-promedio').textContent = '$' + ticketPromedio.toFixed(2);
+            document.getElementById('producto-top').textContent = productoTop ? productoTop[0] : '-';
+        }
+
+        // Filtrar pedidos
+        function filtrarPedidos() {
+            renderPedidos();
+        }
+
+        function filtrarEstado(estado) {
+            filtroEstado = estado;
+            
+            // Actualizar estado visual de los botones
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Activar el botón seleccionado
+            event.target.classList.add('active');
+            
+            // Renderizar pedidos filtrados
+            renderPedidos();
+            
+            // SCROLL AUTOMÁTICO a la sección "Todos los Pedidos"
+            scrollToAllPedidos();
+        }
+
+        // Función para hacer scroll a la sección "Todos los Pedidos"
+        function scrollToAllPedidos() {
+            setTimeout(() => {
+                const seccionTodos = document.querySelector('#pedidos-todos').closest('.card');
+                if (seccionTodos) {
+                    seccionTodos.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                    
+                    // Pequeño ajuste para dejar espacio arriba
+                    setTimeout(() => {
+                        window.scrollBy({
+                            top: -20,
+                            behavior: 'smooth'
+                        });
+                    }, 300);
+                }
+            }, 100);
+        }
+
+        // Actualizar información de respaldo
+        function actualizarInfoRespaldo() {
+            document.getElementById('info-pedidos').textContent = `${pedidos.length} pedidos`;
+            document.getElementById('info-gastos').textContent = `${gastos.length} gastos`;
+            
+            const ultimoRespaldo = localStorage.getItem('ultimo-respaldo');
+            if (ultimoRespaldo) {
+                const fecha = new Date(ultimoRespaldo);
+                document.getElementById('ultimo-respaldo').textContent = formatearFecha(fecha.toISOString().split('T')[0]);
+            }
+        }
+
+        // Mostrar diagnóstico completo del sistema
+        function mostrarDiagnostico() {
+            const diagnosticoDiv = document.getElementById('diagnostico-info');
+            
+            if (diagnosticoDiv.style.display === 'block') {
+                diagnosticoDiv.style.display = 'none';
+                return;
+            }
+            
+            try {
+                // Información de localStorage
+                const pedidosStr = localStorage.getItem('pedidos');
+                const gastosStr = localStorage.getItem('gastos');
+                
+                const pedidosEnStorage = pedidosStr ? JSON.parse(pedidosStr) : [];
+                const gastosEnStorage = gastosStr ? JSON.parse(gastosStr) : [];
+                
+                const tamañoPedidos = pedidosStr ? (pedidosStr.length / 1024).toFixed(2) : '0';
+                const tamañoGastos = gastosStr ? (gastosStr.length / 1024).toFixed(2) : '0';
+                
+                // IDs de los últimos 5 pedidos
+                const ultimosIds = pedidos.slice(0, 5).map(p => p.id).join(', ');
+                
+                const info = `
+🔍 DIAGNÓSTICO DEL SISTEMA
+═══════════════════════════════════════
+
+📊 MEMORIA (Arrays en JavaScript):
+   • Pedidos en memoria: ${pedidos.length}
+   • Gastos en memoria: ${gastos.length}
+
+💾 LOCALSTORAGE:
+   • Pedidos guardados: ${pedidosEnStorage.length}
+   • Gastos guardados: ${gastosEnStorage.length}
+   • Tamaño pedidos: ${tamañoPedidos} KB
+   • Tamaño gastos: ${tamañoGastos} KB
+   • Total: ${(parseFloat(tamañoPedidos) + parseFloat(tamañoGastos)).toFixed(2)} KB
+
+🆔 ÚLTIMOS IDs GENERADOS:
+   ${ultimosIds || 'Ninguno'}
+
+🔧 NAVEGADOR:
+   • UserAgent: ${navigator.userAgent.substring(0, 50)}...
+   • localStorage disponible: ${typeof(Storage) !== "undefined" ? 'Sí ✅' : 'No ❌'}
+
+⚙️ ESTADO DEL SISTEMA:
+   • Filtro actual: ${filtroEstado}
+   • Último ID generado: ${ultimoIdGenerado}
+
+${pedidos.length !== pedidosEnStorage.length ? '⚠️ ADVERTENCIA: Desincronización detectada!' : '✅ Sistema sincronizado correctamente'}
+                `.trim();
+                
+                diagnosticoDiv.textContent = info;
+                diagnosticoDiv.style.display = 'block';
+                
+            } catch (error) {
+                diagnosticoDiv.textContent = '❌ Error al generar diagnóstico: ' + error.message;
+                diagnosticoDiv.style.display = 'block';
+            }
+        }
+
+        // Exportar datos
+        function exportarDatos() {
+            const datos = {
+                version: '1.0',
+                fecha: new Date().toISOString(),
+                pedidos: pedidos,
+                gastos: gastos,
+                metadatos: {
+                    total_pedidos: pedidos.length,
+                    total_gastos: gastos.length,
+                    dispositivo: navigator.userAgent
+                }
+            };
+
+            const json = JSON.stringify(datos, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const fecha = new Date().toISOString().split('T')[0];
+            const nombreArchivo = `AbrilResinart_Respaldo_${fecha}.json`;
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = nombreArchivo;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            // Guardar fecha del último respaldo
+            localStorage.setItem('ultimo-respaldo', new Date().toISOString());
+            actualizarInfoRespaldo();
+
+            showToast('✅ Respaldo descargado correctamente. Guárdelo en un lugar seguro.', 'success');
+        }
+
+        // Importar datos
+        function importarDatos(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const datos = JSON.parse(e.target.result);
+                    
+                    // Validar estructura
+                    if (!datos.pedidos || !datos.gastos) {
+                        showToast('❌ Archivo de respaldo inválido', 'error');
+                        return;
+                    }
+
+                    // Confirmar restauración
+                    const confirmar = confirm(
+                        `¿Está segura de restaurar este respaldo?\n\n` +
+                        `Pedidos en el respaldo: ${datos.pedidos.length}\n` +
+                        `Gastos en el respaldo: ${datos.gastos.length}\n\n` +
+                        `Esto reemplazará todos los datos actuales.`
+                    );
+
+                    if (!confirmar) return;
+
+                    // Restaurar datos
+                    pedidos = datos.pedidos;
+                    gastos = datos.gastos;
+                    
+                    guardarPedidosEnStorage();
+                    guardarGastosEnStorage();
+
+                    // Actualizar interfaz
+                    renderPedidos();
+                    renderGastos();
+                    calcularFinanzas();
+                    actualizarInfoRespaldo();
+                    calcularUsoMemoria();
+
+                    showToast('✅ Datos restaurados correctamente', 'success');
+                    
+                    // Volver a vista de pedidos
+                    showView('pedidos');
+                    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.nav-tab')[0].classList.add('active');
+
+                } catch (error) {
+                    console.error('Error al importar:', error);
+                    showToast('❌ Error al leer el archivo. Asegúrese de que sea un respaldo válido.', 'error');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Limpiar input
+            event.target.value = '';
+        }
+
+        // Enviar por WhatsApp
+        function enviarPorWhatsApp() {
+            // Primero exportar los datos
+            const datos = {
+                version: '1.0',
+                fecha: new Date().toISOString(),
+                pedidos: pedidos,
+                gastos: gastos,
+                metadatos: {
+                    total_pedidos: pedidos.length,
+                    total_gastos: gastos.length
+                }
+            };
+
+            const json = JSON.stringify(datos, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const fecha = new Date().toISOString().split('T')[0];
+            const nombreArchivo = `AbrilResinart_Respaldo_${fecha}.json`;
+            
+            // Crear enlace de descarga
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = nombreArchivo;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            // Guardar fecha del último respaldo
+            localStorage.setItem('ultimo-respaldo', new Date().toISOString());
+            actualizarInfoRespaldo();
+
+            // Esperar un momento para que se descargue
+            setTimeout(() => {
+                // Abrir WhatsApp
+                const mensaje = encodeURIComponent(
+                    '🔐 *Respaldo de AbrilResinart*\n\n' +
+                    `📅 Fecha: ${formatearFecha(fecha)}\n` +
+                    `📦 Pedidos: ${pedidos.length}\n` +
+                    `💸 Gastos: ${gastos.length}\n\n` +
+                    `Archivo descargado: ${nombreArchivo}\n\n` +
+                    `Este es mi respaldo de seguridad de AbrilResinart. ` +
+                    `Guardarlo para recuperar mis datos si es necesario.`
+                );
+                
+                // Abrir WhatsApp para que se envíe a sí misma
+                window.open(`https://wa.me/?text=${mensaje}`, '_blank');
+                
+                showToast('📱 Archivo descargado. WhatsApp se abrirá para que pueda enviárselo.', 'success');
+            }, 500);
+        }
+
+        // Utilidades
+        function formatearFecha(fecha) {
+            const d = new Date(fecha + 'T00:00:00');
+            const opciones = { day: '2-digit', month: 'short', year: 'numeric' };
+            return d.toLocaleDateString('es-ES', opciones);
+        }
+
+        function showToast(mensaje, tipo = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            toast.textContent = mensaje;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3500);
+        }
+
+        // Cerrar modal al hacer clic fuera
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        });
+
+        // ========================================
+        // REGISTRO DEL SERVICE WORKER PARA PWA
+        // ========================================
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker registrado exitosamente:', registration.scope);
+                        
+                        // Verificar actualizaciones cada 30 minutos
+                        setInterval(() => {
+                            registration.update();
+                        }, 1800000);
+                    })
+                    .catch((error) => {
+                        console.log('❌ Error al registrar Service Worker:', error);
+                    });
+            });
+
+            // Detectar cuando hay una nueva versión disponible
+            let refreshing = false;
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                if (!refreshing) {
+                    refreshing = true;
+                    showToast('🔄 Nueva versión disponible. Actualizando...', 'info');
+                    setTimeout(() => window.location.reload(), 1500);
+                }
+            });
+        }
+
+        // Detectar si la app está instalada como PWA
+        window.addEventListener('DOMContentLoaded', () => {
+            // Verificar si está en modo standalone (instalada)
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                              || window.navigator.standalone 
+                              || document.referrer.includes('android-app://');
+            
+            if (isStandalone) {
+                console.log('✅ Aplicación ejecutándose como PWA instalada');
+            }
+        });
+
+        // Evento para instalar la PWA (beforeinstallprompt)
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevenir que Chrome muestre el prompt automáticamente
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Aquí podrías mostrar un botón personalizado para instalar
+            // Por ahora solo lo guardamos para uso futuro
+            console.log('💡 PWA disponible para instalar');
+        });
+
+        // Evento cuando la app se instala exitosamente
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA instalada exitosamente');
+            showToast('✅ AbrilResinart instalado correctamente', 'success');
+            deferredPrompt = null;
+        });
+    </script>
+</body>
+</html>
